@@ -19,16 +19,17 @@ body {
   display: block;
 } */
 
-.box1 {
-  width: 200px;
-  height: 200px;
+/* .box1 {
+  width: 20px;
+  height: 20px;
   background: blue;
   margin-top: 200px;
   margin-left: 600px;
   position: absolute;
-}
+  border-radius: 50%;
+} */
 
-/* .box2 {
+.box2 {
   width: 100px;
   height: 100px;
   background: green;
@@ -37,4 +38,4 @@ body {
   width: 100px;
   height: 100px;
   background: blue;
-} */
+}
