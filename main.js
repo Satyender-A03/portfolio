@@ -220,49 +220,84 @@ import gsap from "gsap";
 //   );
 // });
 
-const t1 = gsap.timeline();
+// const t1 = gsap.timeline();
 
-t1.to(".row", {
-  translateX: "-50%",
-  duration: 3,
-  stagger: 0.25,
-  repeat: -1,
-  yoyo: true,
-  ease: "back.in",
-});
+// t1.to(".row", {
+//   translateX: "-50%",
+//   duration: 3,
+//   stagger: 0.25,
+//   repeat: -1,
+//   yoyo: true,
+//   ease: "back.in",
+// });
 
-setTimeout(() => {
-  t1.pause();
+// setTimeout(() => {
+//   t1.pause();
 
-  const t2 = gsap.timeline();
+//   const t2 = gsap.timeline();
 
-  t2.to(".container", {
-    scale: 3,
-    rotation: 90,
-    duration: 2,
-    ease: "power4.inOut",
-  });
+//   t2.to(".container", {
+//     scale: 3,
+//     rotation: 90,
+//     duration: 2,
+//     ease: "power4.inOut",
+//   });
 
-  t2.to(".row", {
-    translateX: "-550%",
-    duration: 1,
-    stagger: 0.1,
-    ease: "power3.inOut",
-  });
-  t2.to(
-    ".container",
-    {
-      translateY: "-500%",
-      duration: 3,
-      ease: "power4.inOut",
-    },
-    "-=1"
-  );
+//   t2.to(".row", {
+//     translateX: "-550%",
+//     duration: 1,
+//     stagger: 0.1,
+//     ease: "power3.inOut",
+//   });
+//   t2.to(
+//     ".container",
+//     {
+//       translateY: "-500%",
+//       duration: 3,
+//       ease: "power4.inOut",
+//     },
+//     "-=1"
+//   );
 
-  t2.to(".hero-heading", {
-    top: "40%",
-    opacity: 1,
-    ease: "power3.inOut",
-    duration: 1,
-  });
-}, 15000);
+//   t2.to(".hero-heading", {
+//     top: "40%",
+//     opacity: 1,
+//     ease: "power3.inOut",
+//     duration: 1,
+//   });
+// }, 15000);
+
+// const interpolater = gsap.utils.interpolate(0, 200);
+// const interpolater = gsap.utils.interpolate("red", "green");
+
+const interpolater = gsap.utils.interpolate(
+  { a: 0, b: 0, color: "green" },
+  { a: 20, b: 20, color: "yellow" }
+);
+
+console.log(interpolater(0.5));
+// console.log(interpolater(0.999));
+
+// gsap.fromTo(
+//   ".container",
+//   {
+//     backgroundColor: "green",
+//   },
+//   {
+//     backgroundColor: "yellow",
+//     duration: 10,
+//     ease: "none",
+//   }
+// );
+
+// gsap.set(".container", {
+//   backgroundColor: "rgba(128,192,0,1)",
+// });
+
+const normalizer = gsap.utils.normalize(-10, 10, 3);
+
+console.log(normalizer);
+
+const elements = gsap.utils.toArray(".row");
+
+console.log(elements);
