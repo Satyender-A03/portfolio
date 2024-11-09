@@ -270,12 +270,12 @@ import gsap from "gsap";
 // const interpolater = gsap.utils.interpolate(0, 200);
 // const interpolater = gsap.utils.interpolate("red", "green");
 
-const interpolater = gsap.utils.interpolate(
-  { a: 0, b: 0, color: "green" },
-  { a: 20, b: 20, color: "yellow" }
-);
+// const interpolater = gsap.utils.interpolate(
+//   { a: 0, b: 0, color: "green" },
+//   { a: 20, b: 20, color: "yellow" }
+// );
 
-console.log(interpolater(0.5));
+// console.log(interpolater(0.5));
 // console.log(interpolater(0.999));
 
 // gsap.fromTo(
@@ -294,10 +294,36 @@ console.log(interpolater(0.5));
 //   backgroundColor: "rgba(128,192,0,1)",
 // });
 
-const normalizer = gsap.utils.normalize(-10, 10, 3);
+// const normalizer = gsap.utils.normalize(-10, 10, 3);
 
-console.log(normalizer);
+// console.log(normalizer);
 
-const elements = gsap.utils.toArray(".row");
+// const elements = gsap.utils.toArray(".row");
 
-console.log(elements);
+// console.log(elements);
+
+window.addEventListener("mousemove", ({ clientX: x, clientY: y }) => {
+  // document.querySelector(".cursor").style.left = clientX + "px";
+  // document.querySelector(".cursor").style.top = clientY + "px";
+  // gsap.to(".cursor", {
+  //   x,
+  //   y,
+  //   duration: 1,
+  // });
+  // console.log("GSAP TWEEN CALLED");
+  // console.log(gsap.utils.clamp(25, window.innerWidth - 25, x));
+  // let xTo = gsap.quickTo(".cursor", "x", { duration: 0.5 });
+  let xTo = gsap.utils.pipe(
+    gsap.utils.clamp(25, window.innerWidth - 25),
+    gsap.quickTo(".cursor", "x", { duration: 0.5 })
+  );
+  // let yTo = gsap.quickTo(".cursor", "y", { duration: 0.5 });
+  let yTo = gsap.utils.pipe(
+    gsap.utils.clamp(25, window.innerHeight - 25),
+    gsap.quickTo(".cursor", "y", { duration: 0.5 })
+  );
+  xTo(x);
+  yTo(y);
+});
+
+console.log(gsap.utils.random(-100, 100, 2));
