@@ -5,7 +5,7 @@
 }
 
 body {
-  background: #222;
+  /* background: #222; */
   width: 100%;
   overflow-x: hidden;
 }
@@ -127,4 +127,25 @@ body {
 
 body:hover .cursor {
   /* opacity: 1; */
+}
+
+.second-section {
+  height: 200vh;
+  border: 1px solid red;
+}
+
+.first-section {
+  height: 20vh;
+}
+
+.triangle {
+  width: 150px;
+  height: 100px;
+  background: red;
+  /* clip-path: polygon(50% 0%, 0% 100%, 100% 100%); */
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: rotate(145deg);
+  filter: blur(100px);
 }

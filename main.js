@@ -1,5 +1,8 @@
 import "./style.css";
 import gsap from "gsap";
+import ScrollTrigger from "gsap/dist/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // gsap.to(".container", {
 //   x: 200,
@@ -302,7 +305,7 @@ import gsap from "gsap";
 
 // console.log(elements);
 
-window.addEventListener("mousemove", ({ clientX: x, clientY: y }) => {
+window.addEventListener("mousemove", (_event) => {
   // document.querySelector(".cursor").style.left = clientX + "px";
   // document.querySelector(".cursor").style.top = clientY + "px";
   // gsap.to(".cursor", {
@@ -313,17 +316,52 @@ window.addEventListener("mousemove", ({ clientX: x, clientY: y }) => {
   // console.log("GSAP TWEEN CALLED");
   // console.log(gsap.utils.clamp(25, window.innerWidth - 25, x));
   // let xTo = gsap.quickTo(".cursor", "x", { duration: 0.5 });
+
+  const { clientX: x, pageY: y } = _event;
+  // console.log(_event);
   let xTo = gsap.utils.pipe(
-    gsap.utils.clamp(25, window.innerWidth - 25),
+    gsap.utils.clamp(25, window.innerWidth - 45),
     gsap.quickTo(".cursor", "x", { duration: 0.5 })
   );
   // let yTo = gsap.quickTo(".cursor", "y", { duration: 0.5 });
-  let yTo = gsap.utils.pipe(
-    gsap.utils.clamp(25, window.innerHeight - 25),
-    gsap.quickTo(".cursor", "y", { duration: 0.5 })
-  );
+  let yTo = gsap.utils.pipe(gsap.quickTo(".cursor", "y", { duration: 0.5 }));
   xTo(x);
   yTo(y);
 });
 
-console.log(gsap.utils.random(-100, 100, 2));
+// console.log(gsap.utils.random(-100, 100, 2));
+
+// gsap.to("body", {
+//   scrollTrigger: {
+//     trigger: ".second-section",
+//     markers: true,
+//     start: "top 500px",
+//     end: "bottom top",
+//     scrub: 1,
+//     onEnterBack: (_event) => {
+//       console.log(_event);
+//     },
+//   },
+//   backgroundColor: "#fff",
+//   // duration: 2,
+// });
+
+const t1 = gsap.timeline({
+  scrollTrigger: {
+    trigger: ".second-section",
+    markers: true,
+    start: "top top",
+    end: "bottom bottom",
+    scrub: 1,
+    onEnter: () => {
+      console.log("Enter");
+    },
+  },
+});
+
+t1.to(".triangle", {
+  top: 1200,
+  right: 600,
+  transform: "rotate(0)",
+  filter: "blur(0px)",
+});
