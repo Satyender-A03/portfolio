@@ -305,29 +305,29 @@ gsap.registerPlugin(ScrollTrigger);
 
 // console.log(elements);
 
-window.addEventListener("mousemove", (_event) => {
-  // document.querySelector(".cursor").style.left = clientX + "px";
-  // document.querySelector(".cursor").style.top = clientY + "px";
-  // gsap.to(".cursor", {
-  //   x,
-  //   y,
-  //   duration: 1,
-  // });
-  // console.log("GSAP TWEEN CALLED");
-  // console.log(gsap.utils.clamp(25, window.innerWidth - 25, x));
-  // let xTo = gsap.quickTo(".cursor", "x", { duration: 0.5 });
+// window.addEventListener("mousemove", (_event) => {
+//   // document.querySelector(".cursor").style.left = clientX + "px";
+//   // document.querySelector(".cursor").style.top = clientY + "px";
+//   // gsap.to(".cursor", {
+//   //   x,
+//   //   y,
+//   //   duration: 1,
+//   // });
+//   // console.log("GSAP TWEEN CALLED");
+//   // console.log(gsap.utils.clamp(25, window.innerWidth - 25, x));
+//   // let xTo = gsap.quickTo(".cursor", "x", { duration: 0.5 });
 
-  const { clientX: x, pageY: y } = _event;
-  // console.log(_event);
-  let xTo = gsap.utils.pipe(
-    gsap.utils.clamp(25, window.innerWidth - 45),
-    gsap.quickTo(".cursor", "x", { duration: 0.5 })
-  );
-  // let yTo = gsap.quickTo(".cursor", "y", { duration: 0.5 });
-  let yTo = gsap.utils.pipe(gsap.quickTo(".cursor", "y", { duration: 0.5 }));
-  xTo(x);
-  yTo(y);
-});
+//   const { clientX: x, pageY: y } = _event;
+//   // console.log(_event);
+//   let xTo = gsap.utils.pipe(
+//     gsap.utils.clamp(25, window.innerWidth - 45),
+//     gsap.quickTo(".cursor", "x", { duration: 0.5 })
+//   );
+//   // let yTo = gsap.quickTo(".cursor", "y", { duration: 0.5 });
+//   let yTo = gsap.utils.pipe(gsap.quickTo(".cursor", "y", { duration: 0.5 }));
+//   xTo(x);
+//   yTo(y);
+// });
 
 // console.log(gsap.utils.random(-100, 100, 2));
 
@@ -346,22 +346,140 @@ window.addEventListener("mousemove", (_event) => {
 //   // duration: 2,
 // });
 
-const t1 = gsap.timeline({
-  scrollTrigger: {
-    trigger: ".second-section",
-    markers: true,
-    start: "top top",
-    end: "bottom bottom",
-    scrub: 1,
-    onEnter: () => {
-      console.log("Enter");
-    },
-  },
+// const t1 = gsap.timeline({
+//   scrollTrigger: {
+//     trigger: ".second-section",
+//     markers: true,
+//     start: "top top",
+//     end: "bottom bottom",
+//     scrub: 1,
+//     onEnter: () => {
+//       console.log("Enter");
+//     },
+//   },
+// });
+
+// t1.to(".triangle", {
+//   top: 1200,
+//   right: 600,
+//   transform: "rotate(0)",
+//   filter: "blur(0px)",
+// });
+
+const text = "VARIABLE FONT";
+const heading = document.querySelector(".heading");
+
+// text.split("").forEach((letter) => {
+//   console.log(letter);
+//   const spanElement = document.createElement("span");
+//   spanElement.classList.add("letter");
+
+//   spanElement.innerText = letter;
+//   heading.append(spanElement);
+// });
+
+let maxDist;
+const mouse = {
+  x: 0,
+  y: 0,
+};
+
+const cursor = {
+  x: window.innerWidth,
+  y: window.innerHeight,
+};
+
+Math.dist = function (a, b) {
+  let dx = b.x - a.x;
+  let dy = b.y - a.y;
+  return Math.sqrt(Math.pow(dx, 2), Math.pow(dy, 2));
+};
+
+window.addEventListener("mousemove", (_event) => {
+  cursor.x = _event.clientX;
+  cursor.y = _event.clientY;
 });
 
-t1.to(".triangle", {
-  top: 1200,
-  right: 600,
-  transform: "rotate(0)",
-  filter: "blur(0px)",
-});
+const Char = function (container, char) {
+  const spanElement = document.createElement("span");
+  spanElement.innerText = char;
+
+  container.appendChild(spanElement);
+
+  this.getDist = function () {
+    this.pos = spanElement.getBoundingClientRect();
+
+    return Math.dist(mouse, {
+      x: this.pos.x,
+      y: 0,
+    });
+  };
+
+  this.getAttr = function (dist, min, max) {
+    const weight = max - Math.abs((max * dist) / maxDist);
+
+    return Math.max(min, weight + min);
+  };
+
+  this.update = function (args) {
+    let dist = this.getDist();
+
+    this.weight = args.weight ? ~~this.getAttr(dist, 100, 800) : 400;
+
+    this.draw();
+  };
+
+  this.draw = function () {
+    spanElement.style = `font-variation-settings: 'wght' ${this.weight}`;
+  };
+};
+
+const VFont = function () {
+  let title,
+    str,
+    chars = [];
+
+  this.init = function () {
+    title = document.querySelector(".heading");
+
+    str = title.innerText;
+
+    title.innerHTML = "";
+
+    for (let i = 0; i < str.length; i++) {
+      let _char = new Char(title, str[i]);
+      chars.push(_char);
+    }
+    window.addEventListener("resize", this.setSize.bind(this));
+  };
+
+  this.setSize = function () {
+    let fontSize = window.innerWidth / (str.length / 2);
+
+    title.style = `font-size: ${fontSize}px`;
+  };
+
+  this.animate = function () {
+    mouse.x += (cursor.x - mouse.x) / 20;
+    mouse.y += (cursor.y - mouse.y) / 20;
+
+    requestAnimationFrame(this.animate.bind(this));
+    this.render();
+  };
+
+  this.render = function () {
+    maxDist = title.getBoundingClientRect().width / 2;
+
+    for (let i = 0; i < chars.length; i++) {
+      chars[i].update({
+        weight: true,
+      });
+    }
+  };
+
+  this.init();
+  this.animate();
+  return this;
+};
+
+const variableFont = new VFont();
