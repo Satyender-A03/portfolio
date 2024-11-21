@@ -591,4 +591,29 @@ class VFont {
 
 const vf = new VFont(".heading");
 
-console.log(characters);
+const path = "M 0 200 Q 900 200 1800 200";
+
+const svg = document.querySelector("svg");
+const svgCoords = svg.getBoundingClientRect();
+
+svg.addEventListener("mousemove", (_event) => {
+  // console.log(_event.clientY / 2 / svg.getBoundingClientRect().height);
+  const coordinates =
+    ((_event.clientY - svgCoords.top) / svgCoords.height) * 400;
+
+  gsap.set("svg path", {
+    attr: {
+      d: `M 0 200 Q 900 ${coordinates} 1800 200`,
+    },
+  });
+});
+
+svg.addEventListener("mouseleave", () => {
+  gsap.to("svg path", {
+    attr: {
+      d: path,
+    },
+    duration: 0.8,
+    ease: "elastic.out(1.75,0.2)",
+  });
+});

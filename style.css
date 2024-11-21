@@ -17,6 +17,8 @@ body {
   overflow-x: hidden;
   display: flex;
   align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .heading,
@@ -35,6 +37,10 @@ body {
 .heading span {
   transform: translateY(-10px);
   user-select: none;
+}
+
+svg {
+  /* background: red; */
 }
 
 /* .container {
