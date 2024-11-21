@@ -19,7 +19,8 @@ body {
   align-items: center;
 }
 
-.heading {
+.heading,
+.heading2 {
   font-family: "Compressa VF";
   width: 100%;
   font-size: 200px;

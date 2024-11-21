@@ -378,108 +378,217 @@ const heading = document.querySelector(".heading");
 //   heading.append(spanElement);
 // });
 
+// let maxDist;
+// const mouse = {
+//   x: 0,
+//   y: 0,
+// };
+
+// const cursor = {
+//   x: window.innerWidth,
+//   y: window.innerHeight,
+// };
+
+// Math.dist = function (a, b) {
+//   let dx = b.x - a.x;
+//   let dy = b.y - a.y;
+//   return Math.sqrt(Math.pow(dx, 2), Math.pow(dy, 2));
+// };
+
+// window.addEventListener("mousemove", (_event) => {
+//   cursor.x = _event.clientX;
+//   cursor.y = _event.clientY;
+// });
+
+// const Char = function (container, char) {
+//   const spanElement = document.createElement("span");
+//   spanElement.innerText = char;
+
+//   container.appendChild(spanElement);
+
+//   this.getDist = function () {
+//     this.pos = spanElement.getBoundingClientRect();
+
+//     return Math.dist(mouse, {
+//       x: this.pos.x,
+//       y: 0,
+//     });
+//   };
+
+//   this.getAttr = function (dist, min, max) {
+//     const weight = max - Math.abs((max * dist) / maxDist);
+
+//     return Math.max(min, weight + min);
+//   };
+
+//   this.update = function (args) {
+//     let dist = this.getDist();
+
+//     this.weight = args.weight ? ~~this.getAttr(dist, 100, 800) : 400;
+
+//     this.draw();
+//   };
+
+//   this.draw = function () {
+//     spanElement.style = `font-variation-settings: 'wght' ${this.weight}`;
+//   };
+// };
+
+// const VFont = function () {
+//   let title,
+//     str,
+//     chars = [];
+
+//   this.init = function () {
+//     title = document.querySelector(".heading");
+
+//     str = title.innerText;
+
+//     title.innerHTML = "";
+
+//     for (let i = 0; i < str.length; i++) {
+//       let _char = new Char(title, str[i]);
+//       chars.push(_char);
+//     }
+//     window.addEventListener("resize", this.setSize.bind(this));
+//   };
+
+//   this.setSize = function () {
+//     let fontSize = window.innerWidth / (str.length / 2);
+
+//     title.style = `font-size: ${fontSize}px`;
+//   };
+
+//   this.animate = function () {
+//     mouse.x += (cursor.x - mouse.x) / 20;
+//     mouse.y += (cursor.y - mouse.y) / 20;
+
+//     requestAnimationFrame(this.animate.bind(this));
+//     this.render();
+//   };
+
+//   this.render = function () {
+//     maxDist = title.getBoundingClientRect().width / 2;
+
+//     for (let i = 0; i < chars.length; i++) {
+//       chars[i].update({
+//         weight: true,
+//       });
+//     }
+//   };
+
+//   this.init();
+//   this.animate();
+//   return this;
+// };
+
+// const variableFont = new VFont();
+
 let maxDist;
+const cursor = {
+  x: window.innerWidth,
+  y: window.innerHeight,
+};
 const mouse = {
   x: 0,
   y: 0,
 };
 
-const cursor = {
-  x: window.innerWidth,
-  y: window.innerHeight,
-};
+window.addEventListener(
+  "mousemove",
+  (_event) => {
+    cursor.x = _event.clientX;
+    cursor.y = _event.clientY;
+  },
+  { passive: true }
+);
 
 Math.dist = function (a, b) {
-  let dx = b.x - a.x;
-  let dy = b.y - a.y;
-  return Math.sqrt(Math.pow(dx, 2), Math.pow(dy, 2));
+  const dx = b.x - a.x;
+
+  return Math.sqrt(dx * dx);
 };
 
-window.addEventListener("mousemove", (_event) => {
-  cursor.x = _event.clientX;
-  cursor.y = _event.clientY;
-});
+class Char {
+  constructor(container, char) {
+    this.spanElement = document.createElement("span");
+    this.spanElement.innerText = char;
 
-const Char = function (container, char) {
-  const spanElement = document.createElement("span");
-  spanElement.innerText = char;
+    container.append(this.spanElement);
+  }
 
-  container.appendChild(spanElement);
-
-  this.getDist = function () {
-    this.pos = spanElement.getBoundingClientRect();
+  getDist() {
+    this.position = this.spanElement.getBoundingClientRect();
 
     return Math.dist(mouse, {
-      x: this.pos.x,
-      y: 0,
+      x: this.position.x,
     });
-  };
+  }
 
-  this.getAttr = function (dist, min, max) {
+  getWeight(dist, min, max) {
     const weight = max - Math.abs((max * dist) / maxDist);
 
     return Math.max(min, weight + min);
-  };
+  }
 
-  this.update = function (args) {
+  update() {
     let dist = this.getDist();
 
-    this.weight = args.weight ? ~~this.getAttr(dist, 100, 800) : 400;
+    this.weight = ~~this.getWeight(dist, 100, 900);
 
     this.draw();
-  };
+  }
 
-  this.draw = function () {
-    spanElement.style = `font-variation-settings: 'wght' ${this.weight}`;
-  };
-};
+  draw() {
+    this.spanElement.style.fontVariationSettings = `'wght' ${this.weight}`;
+  }
+}
 
-const VFont = function () {
-  let title,
-    str,
-    chars = [];
+class VFont {
+  constructor(container) {
+    this.containerClass = container;
+    this.chars = [];
+    this.init();
+    this.animate();
+  }
 
-  this.init = function () {
-    title = document.querySelector(".heading");
+  init() {
+    this.container = document.querySelector(this.containerClass);
+    this.str = this.container.innerText;
+    this.container.innerHTML = "";
 
-    str = title.innerText;
+    for (let i = 0; i < this.str.length; i++) {
+      this.char = new Char(this.container, this.str[i]);
 
-    title.innerHTML = "";
-
-    for (let i = 0; i < str.length; i++) {
-      let _char = new Char(title, str[i]);
-      chars.push(_char);
+      this.chars.push(this.char);
+      this.setSize();
+      window.addEventListener("resize", this.setSize.bind(this));
     }
-    window.addEventListener("resize", this.setSize.bind(this));
-  };
+  }
 
-  this.setSize = function () {
-    let fontSize = window.innerWidth / (str.length / 2);
+  setSize() {
+    let fontSize = window.innerWidth / (this.str.length / 2);
 
-    title.style = `font-size: ${fontSize}px`;
-  };
+    this.container.style = `font-size: ${fontSize}px`;
+  }
 
-  this.animate = function () {
+  animate() {
     mouse.x += (cursor.x - mouse.x) / 20;
     mouse.y += (cursor.y - mouse.y) / 20;
 
     requestAnimationFrame(this.animate.bind(this));
     this.render();
-  };
+  }
 
-  this.render = function () {
-    maxDist = title.getBoundingClientRect().width / 2;
+  render() {
+    maxDist = this.container.getBoundingClientRect().width / 2;
 
-    for (let i = 0; i < chars.length; i++) {
-      chars[i].update({
-        weight: true,
-      });
+    for (let i = 0; i < this.chars.length; i++) {
+      this.chars[i].update();
     }
-  };
+  }
+}
 
-  this.init();
-  this.animate();
-  return this;
-};
+const vf = new VFont(".heading");
 
-const variableFont = new VFont();
+console.log(characters);
