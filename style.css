@@ -13,7 +13,7 @@
 body {
   background: #111;
   width: 100%;
-  height: 100vh;
+  /* height: 100vh; */
   overflow-x: hidden;
   display: flex;
   align-items: center;
@@ -37,10 +37,6 @@ body {
 .heading span {
   transform: translateY(-10px);
   user-select: none;
-}
-
-svg {
-  /* background: red; */
 }
 
 /* .container {
@@ -182,3 +178,21 @@ body:hover .cursor { */
   transform: rotate(145deg);
   filter: blur(100px);
 } */
+
+.container {
+  width: 100%;
+  height: 100vh;
+  background: #222;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.box {
+  width: 100px;
+  height: 100px;
+  background: lime;
+  border-radius: 20px;
+}

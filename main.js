@@ -617,3 +617,19 @@ svg.addEventListener("mouseleave", () => {
     ease: "elastic.out(1.75,0.2)",
   });
 });
+
+gsap.to(".box", {
+  scale: 0.1,
+  y: 60,
+  duration: 1,
+  repeat: -1,
+  yoyo: true,
+  ease: "power1.inOut",
+  stagger: {
+    amount: 1.5,
+    grid: [5, 13],
+    from: "center",
+    axis: "y",
+    ease: "power2.inOut",
+  },
+});
